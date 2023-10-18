@@ -108,38 +108,3 @@ Zoom in: Drill down inside each script
     download a file from s3 with f'model{today}.pkl'
     replace the model filename in inference.py to be f'model{today}.pkl'
     git push back to the repo so that prep_job.py, who's calling inference.py has access to the newly trained model
-
-Zoom in: Drill down inside each script
-
-1. prep_job.py
-getting date today in datetime format
-calculate into yesterday
-convert yesterday into str format
-input yesterday into amp_export.sh to get yesterday's data from amplitude
-process the data in box2r, get daily minidf->joined
-get ongoing classes and their required level
-get data from LEB2 database in box3, only of the ongoing classes(almost)-->dbslice
-concat joined and dbslice to get daily_increment
-query dynamodb, get upto_yesterday preprocessed data that was saved in dynamodb
-concat upto_yesterday with daily_increment --> incremented
-write incremented to dynamodb, to be queried tomorrow
-sum incremented into gincremented and normalize it
-input normalized to the model for inference(to get predictions)
-save predictions to dynamodb
-
-2. retrain_script.py
-get date today in string format
-get classes with more than 1 activity to use for training
-get the selected classdata from amplitude(data from the whole period of class)
-chunk the data and process 10 hourly files each for all the files, concat all of them
-get data from LEB2 database
-concat data from LEB@ and amplitude
-normalize and combine it with existing data
-train
-save new model to s3
-3. dl_and_replace.py
-get date today in string format
-download a file from s3 with f'model{today}.pkl'
-replace the model filename in inference.py to be f'model{today}.pkl'
-git push back to the repo so that prep_job.py, who's calling inference.py has access to the newly trained model
-
